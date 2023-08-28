@@ -1,0 +1,65 @@
+﻿@using OnlineStore.Models.Entities;﻿
+@using OnlineStore.Repositories;
+@using OnlineStore.Data;﻿
+@using System.Globalization;
+@model ShoppingCart
+@{
+    ViewData["Title"] = "GetUserCart";
+}
+
+<div style="width:90%;margin:auto" class="mt-2">
+    @if (Model != null && Model.CartDetails != null && Model.CartDetails.Count > 0)
+    {
+        <h5>My Cart</h5>
+
+        <table class="table table-striped" style="vertical-align: middle;">
+            <tr>
+                <th>Product</th>
+                <th>Image</th>
+                <th>Product category</th>
+                <th>Product supplier</th>
+                <th>Unit Price(INR)</th>
+                <th>Total Price</th>
+                <th>Action</th>
+            </tr>
+            @foreach (var item in Model.CartDetails)
+            {
+                <tr>
+                    <td>@item.Product.ProductName</td>
+                    <td>
+                        @if (string.IsNullOrEmpty(item.Product.ProductImageName))
+                        {
+                            <img src="/img/NoImage.png" style="width:80px;height:100px" />
+                        }
+                        else
+                        {
+                            <img src="/img/@item.Product.ProductImageName" style="width:80px;height:100px" />
+                        }
+                    </td>
+                    <td>@item.Product.Category?.CategoryName</td>
+                    <td>@item.Product.Supplier?.SupplierName</td>
+                    <td>@item.Product.ProductPrice X @item.Quantity</td>
+                    <td>@(item.Product.ProductPrice * item.Quantity)</td>
+                    <td>
+                        <a class="btn btn-info" href="/Cart/AddItem?productId=@item.ProductId&&redirect=1">+</a>
+                        <a class="btn btn-info" href="/Cart/Removeitem?productId=@item.ProductId">-</a>
+                    </td>
+                </tr>
+            }
+        </table>
+
+        <div class="my-2">
+            <h5>Total(INR): </h5>
+            @(Model.CartDetails.Select(item => item.Product.ProductPrice * item.Quantity).Sum().ToString("C2", new CultureInfo("uk-UA")))
+        </div>
+
+        <div class="my-2">
+            <a class="btn btn-primary" asp-action="Checkout" asp-controller="Cart">Checkout</a>
+        </div>
+
+    }
+    else
+    {
+        <h5>Cart is empty</h5>
+    }
+</div>

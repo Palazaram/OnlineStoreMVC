@@ -1,0 +1,84 @@
+﻿@using OnlineStore.Models.Entities;﻿
+@using OnlineStore.Repositories;
+@using OnlineStore.Data;﻿
+@using System.Globalization;
+@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "GetUserCart";
+}
+
+
+<div style="width:100%;" class="mt-2">
+<a asp-action="Index" asp-controller="Home" class="btn btn-primary my-2">Back</a>
+    <h5>My Orders</h5>
+    @if (Model != null && Model.Count() > 0)
+    {
+        <table class="table table-striped">
+            <tr>
+                <th>
+                    OrderDate
+                </th>
+                <th>
+                    OrderStatus
+                </th>
+            </tr>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.OrderDate.ToString("dd-MM-yyyy")</td>
+                    <td>@order.OrderStatus.OrderStatusName</td>
+                </tr>
+                @if (order.OrderList != null && order.OrderList.Count > 0)
+                {
+                    <tr>
+                        <td>
+                            <table class="table table-striped" style="vertical-align: middle;">
+                                <tr>
+                                    <td>
+                                        Total:
+                                    </td>
+                                    <td>
+                                        @(order.OrderList.Select(item => item.Product.ProductPrice * item.Quantity).Sum().ToString("C2", new CultureInfo("uk-UA")))
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Image</th>
+                                    <th>Product category</th>
+                                    <th>Product supplier</th>
+                                    <th>Unit Price(INR)</th>
+                                    <th>Total Price</th>
+                                </tr>
+                                @foreach (var item in order.OrderList)
+                                {
+                                    <tr>
+                                        <td>@item.Product.ProductName</td>
+                                        <td>
+                                            @if (string.IsNullOrEmpty(item.Product.ProductImageName))
+                                            {
+                                                <img src="/img/NoImage.png" style="width:80px;height:100px" />
+                                            }
+                                            else
+                                            {
+                                                <img src="/img/@item.Product.ProductImageName" style="width:80px;height:100px" />
+                                            }
+                                        </td>
+                                        <td>@item.Product.Category?.CategoryName</td>
+                                        <td>@item.Product.Supplier?.SupplierName</td>
+                                        <td>@item.Product.ProductPrice X @item.Quantity</td>
+                                        <td>@(item.Product.ProductPrice * item.Quantity)</td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+    }
+    else
+    {
+        <h5>No orders</h5>
+    }
+</div>
+

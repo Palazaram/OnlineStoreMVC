@@ -4,6 +4,8 @@ FluentAPI was used to provide more flexible constraints and relationships betwee
 
 To facilitate user organization and rights management, two roles were defined: "Admin" and "User." **Upon the first launch of the application using UserManager and RoleManager, a user with the "Admin" role is automatically created, using the email address "admin@gmail.com" and the password "**Admin@123**".** A user with the "Admin" role gains the ability to perform CRUD operations: adding, deleting, and editing products.
 
+Validation was added to the product creation form to ensure correct data input and prevent errors when adding new products.
+
 To make purchases, users need to be authorized. After registering on the site, users are assigned the "User" role, allowing them to purchase products, place orders, and view order history.
 
 All information about products, orders, and users is stored in the database. Concurrently, user actions are recorded in the database, ensuring reliable data storage.
